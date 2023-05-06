@@ -32,6 +32,14 @@ services:
       - SYMFONY_DATABASE_NAME=!ChangeMe!
       - SYMFONY_PROJECT_SKELETON=symfony/skeleton
 
-
+  frontend:
+    image: node:alpine
+    entrypoint: /bin/sh
+    ports:
+      - '5173:5173'
+    working_dir: /srv/app
+    volumes:
+      - './frontend:/srv/app'
+    tty: true
 
   
