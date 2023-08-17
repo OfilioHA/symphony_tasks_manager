@@ -6,6 +6,8 @@ use App\Repository\TaskRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
 class Task
@@ -13,21 +15,27 @@ class Task
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['main'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Groups(['main'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['main'])]
     private ?string $description = null;
 
     #[ORM\Column]
+    #[Groups(['main'])]
     private ?int $priority = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'tasks')]
+    #[Ignore]
     private ?self $task_father = null;
 
-    #[ORM\OneToMany(mappedBy: 'task_father', targetEntity: self::class)]
+    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'task_father')]
+    #[Groups(['task_children'])]
     private Collection $tasks;
 
     public function __construct()
