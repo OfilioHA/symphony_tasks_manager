@@ -7,6 +7,7 @@ use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -25,9 +26,7 @@ class TaskController extends AbstractController
     #[Route('/task', name: 'list_tasks', methods: ['GET', 'HEAD'])]
     public function index(): JsonResponse
     {
-        $tasks = $this->repository->findBy([
-            'task_father' => null
-        ]);
+        $tasks = $this->repository->findBy(['task_father' => null]);
         return $this->json($this->serialize($tasks));
     }
 
@@ -47,9 +46,10 @@ class TaskController extends AbstractController
     }
 
     #[Route('/task/{task}', name: 'update_task', methods: ['UPDATE'])]
-    public function update(Task $task): JsonResponse
+    public function update(Task $task, Request $request): JsonResponse
     {
-        $this->repository->save($task, true);
+        $body = $request->getContent();
+        // $this->repository->save($task, true);
         return $this->json([
             'status' => true
         ]);
